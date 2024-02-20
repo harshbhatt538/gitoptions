@@ -1,0 +1,58 @@
+---
+- name: Install and Configure Nginx on Amazon Linux 2
+  hosts: web_servers
+  become: true
+  vars:
+    # Replace these with your actual values
+    aws_region: "ap-south-1"
+    aws_access_key: "AKIASBVB545OKIMYJ24Z"
+    aws_secret_key: "dq7BriyoncYjrm6XXQ/13Xy4Krw+XHulma2bgEX2"
+    s3_bucket_name: "hbuckprod"
+    nginx_config_file: "/etc/nginx/nginx.conf"  # Local path to your Nginx configuration
+
+  tasks:
+    - name: Install necessary packages
+      package:
+        name:
+          - epel-release  # For Amazon Linux 2
+          - nginx
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Create S3 bucket (optional, you can remove this if you already have the bucket)
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        state: present
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+
+    - name: Copy your Nginx configuration file to S3 (optional, see notes below)
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        object: "nginx.conf"
+        src: "{{ nginx_config_file }}"
+        mode: put
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+
+    - name: Download Nginx configuration from S3 (or use your local file)
+      fetch:
+        src: "s3://{{ s3_bucket_name }}/nginx.conf"  # Change to your local path if not using S3
+        dest: "/tmp/nginx.conf"
+        aws_access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+        region: "{{ aws_region }}"
+      when: not ansible_local.file(nginx_config_file)  # Only download if local file doesn't exist
+
+    - name: Place Nginx configuration file in the right location
+      copy:
+        src: "/tmp/nginx.conf"
+        dest: "/etc/nginx/nginx.conf"
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
+

@@ -1,0 +1,47 @@
+- name: Install and Configure Nginx on 4 Servers
+  hosts: web_servers
+  become: true
+  vars:
+    # Replace with your actual values
+    aws_region: "ap-south-1"
+    aws_access_key: "AKIASBVB545OKIMYJ24Z"
+    aws_secret_key: "dq7BriyoncYjrm6XXQ/13Xy4Krw+XHulma2bgEX2"
+    s3_bucket_name: "hbuckprod"
+    nginx_config_file: "/etc/nginx/nginx.conf"
+
+  tasks:
+    - name: Install necessary packages
+      package:
+        name:
+          - epel-release  # For Amazon Linux 2
+          - nginx
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Download Nginx configuration from S3
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        object: "nginx.conf"
+        dest: "/tmp/nginx.conf"
+        mode: get
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+
+    - name: Place Nginx configuration file in the right location
+      copy:
+        src: /tmp/nginx.conf
+        dest: "/etc/nginx/nginx.conf"
+        remote_src: yes
+        owner: root
+        group: root
+        mode: 0644
+
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
+
+  tags:
+    - nginx

@@ -1,0 +1,69 @@
+---
+- name: Install and Configure Nginx on 4 Servers
+  hosts: web_servers
+  become: true
+  vars:
+    # Replace with your actual values
+    aws_region: "ap-south-1"
+    aws_access_key: "AKIASBVB545OKIMYJ24Z"
+    aws_secret_key: "dq7BriyoncYjrm6XXQ/13Xy4Krw+XHulma2bgEX2"
+    s3_bucket_name: "hbuckprod"
+    nginx_config_file: "/etc/nginx/nginx.conf"
+
+  tasks:
+    - name: Install necessary packages
+      yum:
+        name:
+          - epel-release  # For Amazon Linux 2
+          - nginx
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install boto3 library
+      pip:
+        name: boto3
+        executable: pip3
+      become: true
+
+    - name: Create S3 bucket (optional, you can remove this if you already have the bucket)
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        state: present
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+        mode: "0644"
+
+
+    - name: Copy your Nginx configuration file to S3 (optional, see notes below)
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        object: "nginx.conf"
+        src: "{{ nginx_config_file }}"
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+
+    - name: Download Nginx configuration from S3
+      aws_s3:
+        bucket: "{{ s3_bucket_name }}"
+        object: "nginx.conf"
+        dest: "/tmp/nginx.conf"
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        mode: "0644"
+
+    - name: Place Nginx configuration file in the right location
+      copy:
+        src: "/tmp/nginx.conf"
+        dest: "{{ nginx_config_file }}"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
+

@@ -1,0 +1,25 @@
+---
+- name: AWS S3 Bucket Upload - Ansible
+  hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  
+  tasks:
+    - name: Upload/PUT file to S3 bucket
+      amazon.aws.aws_s3:
+        aws_access_key: AKIASBVB545OKIMYJ24Z
+        aws_secret_key: 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
+        region: ap-south-1
+        bucket: hbuckprod
+        mode: put
+        object: 2024/2/14/nginx.conf 
+        src: /etc/nginx/nginx.conf
+           # Specify the permission here (e.g., private, public-read)
+      
+
+      register: putresult
+
+    - debug:
+        msg: "{{ putresult.msg }} and the S3 Object URL is {{putresult.url}}"
+      when: putresult.changed
+
