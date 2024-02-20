@@ -60,3 +60,82 @@ ansible-playbook -i myinventory nginxfile2.yml
 vim myinventory2
 ansible-playbook -i myinventory2 nginxfile2.yml 
 exit
+sudo su -
+sudo su -
+ll
+chown ec2-user:ec2-user myinventory
+sudo chown ec2-user:ec2-user myinventory
+ll
+ansible-playbook -i myinventory nginxfile2.yml 
+ssh 43.205.143.27
+sudo su -
+cd .ssh/
+ls
+cd
+sudo su -
+vim prod-server-key-pair.pem
+ls
+vim prod-server-key-pair.pem 
+sudo vim prod-server-key-pair.pem 
+ll
+chmod 700 prod-server-key-pair.pem 
+sudo vim prod-server-key-pair.pem 
+chmod 400 prod-server-key-pair.pem 
+ssh -i "prod-server-key-pair.pem" ec2-user@ec2-43-205-143-27.ap-south-1.compute.amazonaws.com
+ssh -i "prod-server-key-pair.pem" 13.232.96.158
+vim myinventory3
+ll
+vim myinventory2
+vim myinventory
+pwd
+ll
+vim myinventory
+ansible-playbook -i myinventory3 nginxfile2.yml 
+ansible-playbook -i myinventory2 nginxfile2.yml 
+vim myinventory2 
+ansible-playbook -i myinventory2 nginxfile2.yml 
+ansible-playbook -i myinventory nginxfile2.yml 
+vim myinventory
+ansible-playbook -i myinventory nginxfile2.yml 
+vim myinventory
+vim myinventory2 
+ansible-playbook -i myinventory2 nginxfile2.yml 
+sudo su -
+chown ec2-user:ec2-user nginxfile_new2.yml 
+sudi chown ec2-user:ec2-user nginxfile_new2.yml 
+sudo chown ec2-user:ec2-user nginxfile_new2.yml 
+ansible-playbook -i myinventory2 nginxfile_new2.yml 
+vim myinventory2 
+vim nginxfile_new2.yml 
+vim nginxfile2.yml 
+ansible-playbook -i myinventory2 nginxfile2.yml 
+vim myinventory2 
+git --version
+ll
+git remote add origin git@spruce.arlo.com:hbhatt/myrepo.git
+git init
+git remote add origin git@spruce.arlo.com:hbhatt/myrepo.git
+git branch -M main
+git push -u origin main
+git remote add origin git@spruce.arlo.com:hbhatt/myrepo.git
+git push -u origin main
+git checkout -b main
+git branch
+git checkout -b main
+git push -u origin main
+git add .
+git commit -m "Your commit message here"
+git push -u origin main
+git remote set-url origin git@spruce.arlo.com:hbhatt/myrepo.git
+git push -u origin main
+spruce.arlo.com
+nslookup spruce.arlo.com
+git remote set-url origin https://github.com/harshbhatt538/gitoptions.git
+git push -u origin main
+cd .ssh/
+ls
+sudo su -
+cd
+ls
+git clone git@github.com:harshbhatt538/gitoptions.git
+sudo su -
