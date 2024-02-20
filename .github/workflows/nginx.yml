@@ -37,7 +37,3 @@ jobs:
       - name: Run Ansible playbook
         run: |
           ansible-playbook -i myinventory2 nginxfile2.yml
-        env:
-          AWS_REGION: ap-south-1
-          AWS_ACCESS_KEY_ID: AKIASBVB545OKIMYJ24Z
-          AWS_SECRET_ACCESS_KEY: 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
